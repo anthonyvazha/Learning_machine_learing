@@ -5,6 +5,7 @@ from sklearn import preprocessing, cross_validation, svm
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 from matplotlib import style
+import pickle
 #make plots look good
 style.use('ggplot')
 #getting the stock information(google) form quandl
@@ -50,8 +51,6 @@ X = preprocessing.scale(X)
 #drop all the na terms
 df.dropna(inplace=True)
 y = np.array(df['label'])
-y = np.array(df['label'])
-
 #print(len(x),len(y))
 #shuffle your data(with same row) for not having bias of the sample
 X_train, X_test, y_train, y_test = cross_validation.train_test_split(X,y, test_size=0.2)
@@ -62,6 +61,12 @@ clf = LinearRegression(n_jobs=-1)
 #switch to support vector machine
 #clf = svm.SVR(kernel='poly')
 clf.fit(X_train, y_train)
+#saving the classifier
+with open('linearregression.pickle','wb') as f:
+    pickle.dump(clf,f)
+#use the saved classifier - this for in case the classifier to big to run all the time
+pickle_in = open('linearregression.pickle','rb')
+clf = pickle.load(pickle_in)
 #test you data
 #this prints out a really high accuracy which is proboably due to the fact of the data
 #label data ranges form low number like in the 40s to high 800s and has high variance
@@ -96,4 +101,4 @@ plt.show()
 
 #print both to see data
 #print(df.head())
-print(df.tail())
+#print(df.tail())
